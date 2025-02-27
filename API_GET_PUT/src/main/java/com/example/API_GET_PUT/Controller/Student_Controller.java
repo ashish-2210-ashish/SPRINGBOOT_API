@@ -27,7 +27,6 @@ public class Student_Controller {
     public String post_student(@RequestBody Student student){
         service.post_student(student);
         return "successfully posted";
-
     }
 
     @PutMapping("/Students")
