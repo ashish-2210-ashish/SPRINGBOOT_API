@@ -31,24 +31,24 @@ public class StudentController {
     @PostMapping
     public String addStudent(@RequestBody Student student) {
         studentService.addStudent(student);
-        return "Successfully added into the database.";
+        return "Successfully added into the database ... \n \n";
     }
 
     @PutMapping
     public String updateStudent(@RequestBody Student student) {
         studentService.updateStudent(student);
-        return "Successfully updated into the database.";
+        return "Successfully updated into the database.... \n\n";
     }
 
     @DeleteMapping("/{rollNo}")
     public String deleteStudent(@PathVariable int rollNo) {
         studentService.deleteStudent(rollNo);
-        return "Successfully deleted the record.";
+        return "Successfully deleted the record.... \n\n";
     }
 
     @DeleteMapping("/clear")
     public String clearStudents() {
         studentService.clearStudents();
-        return "Cleared the student table.";
+        return "Cleared the student table.... \n\n";
     }
 }
