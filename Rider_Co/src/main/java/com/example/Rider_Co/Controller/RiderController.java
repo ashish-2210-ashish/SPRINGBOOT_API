@@ -41,8 +41,8 @@ public class RiderController {
         return riderService.deleteRider(riderId);
     }
 
-    @GetMapping("/match/{riderId}")
-    public List<Integer> getNearestDrivers(@PathVariable int riderId){
-        return riderService.getNearestDrivers(riderId);
+    @PostMapping("/match/{riderId}")
+    public String matchDrivers(@PathVariable int riderId){
+        return riderService.matchDrivers(riderId);
     }
 }

@@ -10,20 +10,20 @@ import lombok.NoArgsConstructor;
 public class Ride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int  RideId;
+    private int  rideId;
 
     @Column(nullable = false)
-    private int RiderId;
+    private int riderId;
 
     @Column(nullable = false)
-    private int DriverId;
+    private int driverId;
 
     @Column(nullable = false)
-    private double StartX;
+    private double startX;
 
     @Column(nullable = false)
-    private double StartY;
+    private double startY;
 
     @Column(nullable = true )
-    private boolean IsCompleted= false;
+    private boolean isCompleted= false;
 }

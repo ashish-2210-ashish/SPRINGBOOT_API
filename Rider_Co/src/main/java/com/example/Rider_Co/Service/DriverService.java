@@ -1,7 +1,9 @@
 package com.example.Rider_Co.Service;
 
 import com.example.Rider_Co.Model.Driver;
+import com.example.Rider_Co.Model.Ride;
 import com.example.Rider_Co.Repository.DriverRepository;
+import com.example.Rider_Co.Repository.RideRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ public class DriverService {
 
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private RideRepository rideRepository;
 
     private  static final Logger logger= LoggerFactory.getLogger(DriverService.class);
 
@@ -61,4 +66,21 @@ public class DriverService {
     }
 
 
+    public String AcceptRide(int driverId) {
+        Ride nearestRide=rideRepository.findNearestUnassignedRide();
+        if (nearestRide==null){
+            return "No Rides Available At This Time";
+        }
+        nearestRide.setDriverId(driverId);
+        rideRepository.save(nearestRide);
+
+        Driver driver = driverRepository.findById(driverId).orElse(null);
+        if (driver != null) {
+            driver.setAvailable(false);
+            driverRepository.save(driver);
+        }
+
+        return "RIDE_ACCEPTED " + nearestRide.getRideId();
+
+    }
 }

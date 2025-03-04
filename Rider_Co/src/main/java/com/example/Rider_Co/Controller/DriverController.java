@@ -41,4 +41,9 @@ public class DriverController {
         return driverService.DeleteDriver(driverId);
 
     }
+
+    @PostMapping("/acceptRide/{driverId}")
+        public String acceptRide(@PathVariable int driverId){
+        return driverService.AcceptRide(driverId);
+    }
 }
