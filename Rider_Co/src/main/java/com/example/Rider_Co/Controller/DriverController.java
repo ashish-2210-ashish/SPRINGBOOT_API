@@ -1,6 +1,7 @@
 package com.example.Rider_Co.Controller;
 
 import com.example.Rider_Co.Model.Driver;
+import com.example.Rider_Co.Model.Ride;
 import com.example.Rider_Co.Service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +43,13 @@ public class DriverController {
 
     }
 
-    @PostMapping("/acceptRide/{driverId}")
-        public String acceptRide(@PathVariable int driverId){
-        return driverService.AcceptRide(driverId);
+    @PostMapping("/acceptRide/{driverId}/{rideId}")
+        public String acceptRide(@PathVariable int driverId,@PathVariable int rideId){
+        return driverService.AcceptRide(driverId,rideId);
+    }
+
+    @GetMapping("/availableRides/{driverId}")
+    public List<Ride> getAvailableRides(@PathVariable int driverId) {
+        return driverService.getAvailableRidesForDriver(driverId);
     }
 }
