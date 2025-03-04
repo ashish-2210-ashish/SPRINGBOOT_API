@@ -1,17 +1,13 @@
 package com.example.Rider_Co.Service;
 
-import com.example.Rider_Co.Model.Driver;
 import com.example.Rider_Co.Model.Ride;
 import com.example.Rider_Co.Model.Rider;
-import com.example.Rider_Co.Repository.DriverRepository;
 import com.example.Rider_Co.Repository.RideRepository;
 import com.example.Rider_Co.Repository.RiderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,7 +111,7 @@ public class RiderService {
 //    }
 
 
-    public String matchDrivers(int riderId) {
+    public String matchDrivers(int riderId,double endX,double endY) {
         Rider rider = riderRepository.findById(riderId).orElse(null);
         if (rider == null) {
             return "RIDER_NOT_FOUND";
@@ -135,6 +131,8 @@ public class RiderService {
         ride.setRiderId(riderId);
         ride.setStartX(startX);
         ride.setStartY(startY);
+        ride.setEndX(endX);
+        ride.setEndY(endY);
         ride.setCompleted(false);
 
         rideRepository.save(ride);

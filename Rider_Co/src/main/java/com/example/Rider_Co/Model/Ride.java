@@ -3,6 +3,7 @@ package com.example.Rider_Co.Model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @NoArgsConstructor
@@ -24,6 +25,12 @@ public class Ride {
     @Column(nullable = false)
     private double startY;
 
-    @Column(nullable = true )
+    @Column(nullable = false)
+    private double endX;
+
+    @Column(nullable = false)
+    private double endY;
+
+    @Column(nullable = true, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isCompleted= false;
 }

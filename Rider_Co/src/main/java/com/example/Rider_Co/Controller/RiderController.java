@@ -1,5 +1,6 @@
 package com.example.Rider_Co.Controller;
 
+import com.example.Rider_Co.Dto.MatchRequestDto;
 import com.example.Rider_Co.Model.Rider;
 import com.example.Rider_Co.Service.RiderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,10 @@ public class RiderController {
         return riderService.deleteRider(riderId);
     }
 
-    @PostMapping("/match/{riderId}")
-    public String matchDrivers(@PathVariable int riderId){
-        return riderService.matchDrivers(riderId);
+    @PostMapping(value = "/match/{riderId}", consumes = "application/json")
+    public String matchDrivers(@PathVariable int riderId, @RequestBody MatchRequestDto matchRequestDto){
+        double endX = matchRequestDto.getEndX();
+        double endY = matchRequestDto.getEndY();
+        return riderService.matchDrivers(riderId,endX,endY);
     }
 }
