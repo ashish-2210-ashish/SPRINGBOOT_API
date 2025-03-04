@@ -14,11 +14,11 @@ public class Driver {
     private int DriverId;
 
     @Column(nullable = false)
-    private double Stx;
+    private double X;
 
     @Column(nullable = false)
     private double y;
 
     @Column(nullable = true)
-    private Boolean available=true;
+    private boolean available=true;
 }

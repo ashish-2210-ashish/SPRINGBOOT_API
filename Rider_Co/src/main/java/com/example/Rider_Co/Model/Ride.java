@@ -25,5 +25,5 @@ public class Ride {
     private double StartY;
 
     @Column(nullable = true )
-    private Boolean IsCompleted= false;
+    private boolean IsCompleted= false;
 }

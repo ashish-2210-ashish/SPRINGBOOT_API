@@ -12,33 +12,33 @@ import java.util.List;
 public class DriverController {
 
     @Autowired
-    private DriverService driver_service;
+    private DriverService driverService;
 
     @GetMapping
     public List<Driver> getAllDrivers() {
-        return driver_service.GetAllDrivers();
+        return driverService.GetAllDrivers();
     }
 
     @GetMapping("/{driverId}")
     public Driver getDriverById(@PathVariable int driverId) {
-        return driver_service.GetDriverByID(driverId);
+        return driverService.GetDriverByID(driverId);
     }
 
     @PostMapping
     public String addDriver(@RequestBody Driver driver) {
-        return driver_service.AddDriver(driver);
+        return driverService.AddDriver(driver);
     }
 
     @PutMapping("/{driverId}")
-    public String updateDriver(@PathVariable String driverId ,@RequestBody Driver driver) {
-        driver.setDriverId(Integer.parseInt(driverId));
-        driver_service.UpdateDriver(driver);
+    public String updateDriver(@PathVariable int driverId ,@RequestBody Driver driver) {
+        driver.setDriverId(driverId);
+        driverService.UpdateDriver(driver);
         return "Successfully updated the driver \n\n";
     }
 
     @DeleteMapping("/{driverId}")
     public String deleteDriver(@PathVariable int driverId) {
-        return driver_service.DeleteDriver(driverId);
+        return driverService.DeleteDriver(driverId);
 
     }
 }

@@ -29,8 +29,8 @@ public class RideController {
     }
 
     @PutMapping("/{rideId}")
-    public String updateRide(@PathVariable String rideId, @RequestBody Ride ride) {
-        ride.setRideId(Integer.parseInt(rideId));
+    public String updateRide(@PathVariable int rideId, @RequestBody Ride ride) {
+        ride.setRideId(rideId);
         rideService.updateRide(ride);
         return "Successfully updated the ride \n\n";
     }

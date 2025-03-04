@@ -30,8 +30,8 @@ public class RiderController {
     }
 
     @PutMapping("/{riderId}")
-    public String updateRider(@PathVariable String riderId, @RequestBody Rider rider) {
-        rider.setRiderId(Integer.parseInt(riderId));
+    public String updateRider(@PathVariable int riderId, @RequestBody Rider rider) {
+        rider.setRiderId(riderId);
         riderService.updateRider(rider);
         return "Successfully updated the rider \n\n";
     }
@@ -39,5 +39,10 @@ public class RiderController {
     @DeleteMapping("/{riderId}")
     public String deleteRider(@PathVariable int riderId) {
         return riderService.deleteRider(riderId);
+    }
+
+    @GetMapping("/match/{riderId}")
+    public List<Integer> getNearestDrivers(@PathVariable int riderId){
+        return riderService.getNearestDrivers(riderId);
     }
 }
