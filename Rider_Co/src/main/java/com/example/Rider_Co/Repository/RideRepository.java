@@ -18,8 +18,6 @@ public interface RideRepository extends JpaRepository<Ride, Integer> {
 
     Optional<Ride> findByRiderIdAndIsCompleted(int riderId, boolean isCompleted);
 
-    @Query("SELECT r FROM Ride r WHERE r.driverId = 0 AND r.isCompleted = false ORDER BY r.startX ASC, r.startY ASC")
-    Ride findNearestUnassignedRide();
 
     @Query("SELECT r FROM Ride r WHERE r.driverId = 0 AND r.isCompleted = false ")
     List<Ride> findAllUnassignedRide();

@@ -26,128 +26,123 @@ public class RideService {
     private static final Logger logger = LoggerFactory.getLogger(RideService.class);
 
     public List<Ride> getAllRides() {
-        logger.info("Displaying all rides from the table");
+        logger.info("Fetching all rides from the database");
         return rideRepository.findAll();
     }
 
     public Ride getRideByID(int rideId) {
-        if (rideRepository.existsById(rideId)) {
-            logger.info("Displaying the ride with ID: {}", rideId);
-            return rideRepository.findById(rideId).orElse(new Ride());
-        } else {
-            logger.warn("Ride with ID: {} doesn't exist.", rideId);
-            return new Ride();
-        }
+        return rideRepository.findById(rideId)
+                .orElseGet(() -> {
+                    logger.warn("Ride with ID {} not found.", rideId);
+                    return new Ride();
+                });
     }
 
     public String addRide(Ride ride) {
         rideRepository.save(ride);
         logger.info("Ride with ID: {} added successfully", ride.getRideId());
-        return "Successfully added the ride with ID: " + ride.getRideId() + "\n\n";
+        return "Successfully added ride with ID: " + ride.getRideId();
     }
 
     public String updateRide(Ride ride) {
-        if (rideRepository.existsById(ride.getRideId())) {
-            rideRepository.save(ride);
-            logger.info("Ride with ID: {} updated successfully", ride.getRideId());
-            return "Successfully updated the ride with ID: " + ride.getRideId() + "\n\n";
-        } else {
-            logger.warn("Ride with ID: {} doesn't exist and cannot be updated.", ride.getRideId());
-            return "Ride with ID: " + ride.getRideId() + " doesn't exist.\n\n";
+        if (!rideRepository.existsById(ride.getRideId())) {
+            logger.warn("Ride with ID: {} does not exist, update failed.", ride.getRideId());
+            return "Ride with ID: " + ride.getRideId() + " does not exist.";
         }
+
+        rideRepository.save(ride);
+        logger.info("Ride with ID: {} updated successfully", ride.getRideId());
+        return "Successfully updated ride with ID: " + ride.getRideId();
     }
 
     public String deleteRide(int rideId) {
-        if (rideRepository.existsById(rideId)) {
-            rideRepository.deleteById(rideId);
-            logger.info("Ride with ID: {} deleted successfully", rideId);
-            return "Successfully deleted the ride with ID: " + rideId + "\n\n";
-        } else {
-            logger.warn("Ride with ID: {} doesn't exist and cannot be deleted.", rideId);
-            return "Ride with ID: " + rideId + " doesn't exist.\n\n";
+        if (!rideRepository.existsById(rideId)) {
+            logger.warn("Ride with ID: {} does not exist, deletion failed.", rideId);
+            return "Ride with ID: " + rideId + " does not exist.";
         }
+
+        rideRepository.deleteById(rideId);
+        logger.info("Ride with ID: {} deleted successfully", rideId);
+        return "Successfully deleted ride with ID: " + rideId;
     }
 
-    public String stopRide(int rideId,double timeTaken) {
+    public String stopRide(int rideId, double timeTaken) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
-
         if (currentRide == null) {
-            return "Ride " + rideId + " doesn't exist...\n";
+            logger.warn("Ride {} not found, cannot stop.", rideId);
+            return "Ride " + rideId + " does not exist.";
         }
 
         if (currentRide.isCompleted()) {
-            return "Ride " + rideId + " is already completed...\n";
+            logger.warn("Ride {} is already completed.", rideId);
+            return "Ride " + rideId + " is already completed.";
         }
+
         currentRide.setCompleted(true);
         currentRide.setTimeTaken(timeTaken);
         rideRepository.save(currentRide);
 
-        int driverId = currentRide.getDriverId();
-        if (driverId != 0) {
-            Driver currentDriver = driverRepository.findById(driverId).orElse(null);
-            if (currentDriver != null) {
-                currentDriver.setAvailable(true);
-                driverRepository.save(currentDriver);
-            }
-        }
+        // Free up the driver
+        releaseDriver(currentRide.getDriverId());
 
-        return "Ride " + rideId + " successfully stopped...\n";
+        logger.info("Ride {} stopped successfully.", rideId);
+        return "Ride " + rideId + " successfully stopped.";
     }
 
     public String cancelRide(int rideId) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
-
         if (currentRide == null) {
-            return "Ride " + rideId + " doesn't exist...\n";
+            logger.warn("Ride {} not found, cannot cancel.", rideId);
+            return "Ride " + rideId + " does not exist.";
         }
 
         if (currentRide.isCompleted()) {
-            return "Ride " + rideId + " is already completed...\n";
+            logger.warn("Ride {} is already completed, cannot cancel.", rideId);
+            return "Ride " + rideId + " is already completed.";
         }
 
-
-        int driverId = currentRide.getDriverId();
-        if (driverId != 0) {
-            Driver currentDriver = driverRepository.findById(driverId).orElse(null);
-            if (currentDriver != null) {
-                currentDriver.setAvailable(true);
-                driverRepository.save(currentDriver);
-            }
-        }
+        releaseDriver(currentRide.getDriverId());
+        logger.info("Ride {} canceled successfully.", rideId);
 
         return deleteRide(rideId);
     }
 
     public String billRide(int rideId) {
-
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
-
-        if (currentRide.getRideFare() !=0){
-            return  "Total fare of  the ride :"+currentRide.getRideId()+" is RS. "+currentRide.getRideFare()+ "\n";
-        }
-
         if (currentRide == null) {
-            return "Ride " + rideId + " doesn't exist...\n";
+            logger.warn("Ride {} not found, cannot generate bill.", rideId);
+            return "Ride " + rideId + " does not exist.";
         }
 
-        double startX=currentRide.getStartX();
-        double startY=currentRide.getStartY();
-        double endX=currentRide.getEndX();
-        double endY=currentRide.getEndY();
-        double TimeTaken=currentRide.getTimeTaken();
-        double baseFare = 50;
-        double distance=calculateDistance(startX,startY,endX,endY);
-        double timeFare = 2 * TimeTaken;
-        double distanceFare = 6.5 * distance;
+        if (currentRide.getRideFare() != 0) {
+            logger.info("Ride {} already has a fare calculated: Rs. {}", rideId, currentRide.getRideFare());
+            return "Total fare of the ride " + rideId + " is Rs. " + currentRide.getRideFare();
+        }
 
-        double fare = baseFare + distanceFare + timeFare;
-        double totalFare = fare + (fare * 0.2);
+        double distance = calculateDistance(
+                currentRide.getStartX(), currentRide.getStartY(),
+                currentRide.getEndX(), currentRide.getEndY()
+        );
+        double timeFare = 2 * currentRide.getTimeTaken();
+        double distanceFare = 6.5 * distance;
+        double baseFare = 50;
+        double totalFare = (baseFare + distanceFare + timeFare) * 1.2; // Including 20% tax
 
         currentRide.setRideFare(totalFare);
         rideRepository.save(currentRide);
 
+        logger.info("Ride {} billed successfully. Total fare: Rs. {}", rideId, totalFare);
+        return "Total fare of the ride " + rideId + " is Rs. " + totalFare;
+    }
 
-        return  "Total fare of  the ride :"+currentRide.getRideId()+" is RS. "+totalFare+ "\n";
+    private void releaseDriver(int driverId) {
+        if (driverId == 0) return;
+
+        driverRepository.findById(driverId).ifPresent(driver -> {
+            driver.setAvailable(true);
+            driverRepository.save(driver);
+            logger.info("Driver {} marked as available.", driverId);
+        });
     }
 
     private double calculateDistance(double x1, double y1, double x2, double y2) {
@@ -155,12 +150,12 @@ public class RideService {
     }
 
     public List<Ride> getAllRidesByRider(int riderId) {
-        logger.info("Displaying all rides for rider " + riderId);
+        logger.info("Fetching all rides for rider {}", riderId);
         return rideRepository.findByRiderId(riderId);
     }
 
     public List<Ride> getAllRidesByDriver(int driverId) {
-        logger.info("Displaying all rides for driver " + driverId);
+        logger.info("Fetching all rides for driver {}", driverId);
         return rideRepository.findByDriverId(driverId);
     }
 }
