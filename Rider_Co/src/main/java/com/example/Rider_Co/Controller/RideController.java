@@ -61,30 +61,6 @@ public class RideController {
         return rideService.getRideByID(rideId);
     }
 
-    /**
-     * Adds a new ride.
-     * @param ride Ride object to add
-     * @return Success message
-     */
-    @PostMapping
-    public String addRide(@RequestBody Ride ride) {
-        logger.info("Adding new ride: {}", ride);
-        return rideService.addRide(ride);
-    }
-
-    /**
-     * Updates ride details.
-     * @param rideId ID of the ride to update
-     * @param ride Updated ride details
-     * @return Success message
-     */
-    @PutMapping("/{rideId}")
-    public String updateRide(@PathVariable int rideId, @RequestBody Ride ride) {
-        logger.info("Updating ride with ID: {}", rideId);
-        ride.setRideId(rideId);
-        rideService.updateRide(ride);
-        return "Successfully updated the ride";
-    }
 
     /**
      * Deletes a ride.

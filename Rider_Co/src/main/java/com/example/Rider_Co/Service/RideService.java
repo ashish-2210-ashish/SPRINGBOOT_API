@@ -38,22 +38,8 @@ public class RideService {
                 });
     }
 
-    public String addRide(Ride ride) {
-        rideRepository.save(ride);
-        logger.info("Ride with ID: {} added successfully", ride.getRideId());
-        return "Successfully added ride with ID: " + ride.getRideId();
-    }
 
-    public String updateRide(Ride ride) {
-        if (!rideRepository.existsById(ride.getRideId())) {
-            logger.warn("Ride with ID: {} does not exist, update failed.", ride.getRideId());
-            return "Ride with ID: " + ride.getRideId() + " does not exist.";
-        }
 
-        rideRepository.save(ride);
-        logger.info("Ride with ID: {} updated successfully", ride.getRideId());
-        return "Successfully updated ride with ID: " + ride.getRideId();
-    }
 
     public String deleteRide(int rideId) {
         if (!rideRepository.existsById(rideId)) {
