@@ -92,7 +92,11 @@ public class DriverService {
     public List<Ride> getAvailableRidesForDriver(int driverId) {
         Driver driver = driverRepository.findById(driverId).orElse(null);
         if (driver == null) {
-            return new ArrayList<>(); // Return empty if driver not found
+            return new ArrayList<>();
+        }
+
+        if (!driver.isAvailable()){
+            return new ArrayList<>();
         }
 
         double driverX = driver.getX();
@@ -100,7 +104,7 @@ public class DriverService {
 
         List<Ride> availableRides = rideRepository.findAllUnassignedRide();
 
-        // Sort rides by nearest distance
+
         for (int i = 0; i < availableRides.size(); i++) {
             for (int j = i + 1; j < availableRides.size(); j++) {
                 Ride r1 = availableRides.get(i);

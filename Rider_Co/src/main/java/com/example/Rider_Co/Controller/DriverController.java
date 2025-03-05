@@ -52,4 +52,8 @@ public class DriverController {
     public List<Ride> getAvailableRides(@PathVariable int driverId) {
         return driverService.getAvailableRidesForDriver(driverId);
     }
+
+
+
+
 }

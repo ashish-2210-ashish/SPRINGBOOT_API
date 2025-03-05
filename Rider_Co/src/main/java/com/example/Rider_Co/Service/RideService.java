@@ -1,6 +1,8 @@
 package com.example.Rider_Co.Service;
 
+import com.example.Rider_Co.Model.Driver;
 import com.example.Rider_Co.Model.Ride;
+import com.example.Rider_Co.Repository.DriverRepository;
 import com.example.Rider_Co.Repository.RideRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,9 @@ public class RideService {
 
     @Autowired
     private RideRepository rideRepository;
+
+    @Autowired
+    private DriverRepository driverRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(RideService.class);
 
@@ -58,5 +63,54 @@ public class RideService {
             logger.warn("Ride with ID: {} doesn't exist and cannot be deleted.", rideId);
             return "Ride with ID: " + rideId + " doesn't exist.\n\n";
         }
+    }
+
+    public String stopRide(int rideId) {
+        Ride currentRide = rideRepository.findById(rideId).orElse(null);
+
+        if (currentRide == null) {
+            return "Ride " + rideId + " doesn't exist...\n";
+        }
+
+        if (currentRide.isCompleted()) {
+            return "Ride " + rideId + " is already completed...\n";
+        }
+        currentRide.setCompleted(true);
+        rideRepository.save(currentRide);
+
+        int driverId = currentRide.getDriverId();
+        if (driverId != 0) {
+            Driver currentDriver = driverRepository.findById(driverId).orElse(null);
+            if (currentDriver != null) {
+                currentDriver.setAvailable(true);
+                driverRepository.save(currentDriver);
+            }
+        }
+
+        return "Ride " + rideId + " successfully stopped...\n";
+    }
+
+    public String cancelRide(int rideId) {
+        Ride currentRide = rideRepository.findById(rideId).orElse(null);
+
+        if (currentRide == null) {
+            return "Ride " + rideId + " doesn't exist...\n";
+        }
+
+        if (currentRide.isCompleted()) {
+            return "Ride " + rideId + " is already completed...\n";
+        }
+
+
+        int driverId = currentRide.getDriverId();
+        if (driverId != 0) {
+            Driver currentDriver = driverRepository.findById(driverId).orElse(null);
+            if (currentDriver != null) {
+                currentDriver.setAvailable(true);
+                driverRepository.save(currentDriver);
+            }
+        }
+
+        return deleteRide(rideId);
     }
 }

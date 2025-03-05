@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Student {
     @Id
-    private int rollNo;
+    private String rollNo;
     private String name;
     private String gender;
     private String field;

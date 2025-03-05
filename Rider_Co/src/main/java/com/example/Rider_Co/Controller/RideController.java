@@ -39,4 +39,16 @@ public class RideController {
     public String deleteRide(@PathVariable int rideId) {
         return rideService.deleteRide(rideId);
     }
+
+    @PutMapping("/stop/{rideId}")
+    public String stopRide(@PathVariable int rideId) {
+        return rideService.stopRide(rideId);
+    }
+
+    @PutMapping("/cancel/{rideId}")
+    public String cancelRide(@PathVariable int rideId) {
+        return rideService.cancelRide(rideId);
+    }
+
+
 }

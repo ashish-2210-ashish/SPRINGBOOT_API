@@ -24,7 +24,7 @@ public class StudentController {
     }
 
     @GetMapping("/{rollNo}")
-    public Optional<Student> getStudentById(@PathVariable int rollNo) {
+    public Optional<Student> getStudentById(@PathVariable String rollNo) {
         return studentService.getStudentById(rollNo);
     }
 
@@ -41,7 +41,7 @@ public class StudentController {
     }
 
     @DeleteMapping("/{rollNo}")
-    public String deleteStudent(@PathVariable int rollNo) {
+    public String deleteStudent(@PathVariable String rollNo) {
         studentService.deleteStudent(rollNo);
         return "Successfully deleted the record.... \n\n";
     }
