@@ -11,6 +11,11 @@ import java.util.Optional;
 @Repository
 public interface RideRepository extends JpaRepository<Ride, Integer> {
 
+    List<Ride> findByRiderId(int riderId);
+
+    List<Ride> findByDriverId(int driverId);
+
+
     Optional<Ride> findByRiderIdAndIsCompleted(int riderId, boolean isCompleted);
 
     @Query("SELECT r FROM Ride r WHERE r.driverId = 0 AND r.isCompleted = false ORDER BY r.startX ASC, r.startY ASC")

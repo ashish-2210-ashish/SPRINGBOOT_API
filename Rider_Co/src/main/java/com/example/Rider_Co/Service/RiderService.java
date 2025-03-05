@@ -65,51 +65,6 @@ public class RiderService {
         }
     }
 
-//    public List<Integer> getNearestDrivers(int riderId) {
-//        Rider rider = riderRepository.findById(riderId).orElse(null);
-//        if (rider == null) {
-//            return new ArrayList<>();
-//        }
-//
-//        double riderX = rider.getX();
-//        double riderY = rider.getY();
-//
-//
-//        List<Driver> availableDrivers = driverRepository.findByavailable(true);
-//
-//
-//        List<Integer> nearestDrivers = new ArrayList<>();
-//        double[] distances = new double[5];
-//
-//        for (Driver driver : availableDrivers) {
-//            double distance = calculateDistance(riderX, riderY, driver.getX(), driver.getY());
-//
-//            if (distance <= 5) {
-//                insertDriverSorted(nearestDrivers, distances, driver.getDriverId(), distance);
-//            }
-//        }
-//
-//        return nearestDrivers;
-//    }
-//
-//
-//    private void insertDriverSorted(List<Integer> driverList, double[] distances, int driverId, double distance) {
-//        for (int i = 0; i < 5; i++) {
-//            if (driverList.size() < i + 1 || distance < distances[i] || (distance == distances[i] && driverId < driverList.get(i))) {
-//                driverList.add(i, driverId);
-//                distances[i] = distance;
-//                if (driverList.size() > 5) {
-//                    driverList.remove(5);
-//                }
-//                return;
-//            }
-//        }
-//    }
-//
-//    private double calculateDistance(double x1, double y1, double x2, double y2) {
-//        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-//    }
-
 
     public String matchDrivers(int riderId,double endX,double endY) {
         Rider rider = riderRepository.findById(riderId).orElse(null);
@@ -133,6 +88,8 @@ public class RiderService {
         ride.setStartY(startY);
         ride.setEndX(endX);
         ride.setEndY(endY);
+        ride.setRideFare(0);
+        ride.setTimeTaken(0);
         ride.setCompleted(false);
 
         rideRepository.save(ride);

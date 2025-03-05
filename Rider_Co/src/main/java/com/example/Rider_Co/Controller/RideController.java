@@ -18,6 +18,16 @@ public class RideController {
         return rideService.getAllRides();
     }
 
+    @GetMapping("/rider/{riderId}")
+    public List<Ride> getAllRideByRider(@PathVariable int riderId) {
+        return rideService.getAllRidesByRider(riderId);
+    }
+
+    @GetMapping("/driver/{driverId}")
+    public List<Ride> getAllRideByDriver(@PathVariable int driverId) {
+        return rideService.getAllRidesByDriver(driverId);
+    }
+
     @GetMapping("/{rideId}")
     public Ride getRideById(@PathVariable int rideId) {
         return rideService.getRideByID(rideId);
@@ -41,14 +51,23 @@ public class RideController {
     }
 
     @PutMapping("/stop/{rideId}")
-    public String stopRide(@PathVariable int rideId) {
-        return rideService.stopRide(rideId);
+    public String stopRide(@PathVariable int rideId,@RequestBody double timeTaken) {
+        return rideService.stopRide(rideId,timeTaken);
+    }
+
+    @GetMapping("/bill/{rideId}")
+    public String billRide(@PathVariable int rideId) {
+        return rideService.billRide(rideId);
     }
 
     @PutMapping("/cancel/{rideId}")
     public String cancelRide(@PathVariable int rideId) {
         return rideService.cancelRide(rideId);
     }
+
+
+
+
 
 
 }

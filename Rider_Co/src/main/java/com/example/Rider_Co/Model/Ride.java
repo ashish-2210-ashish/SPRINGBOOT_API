@@ -33,4 +33,10 @@ public class Ride {
 
     @Column(nullable = true, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean isCompleted= false;
+
+    @Column(nullable = false)
+    private double rideFare;
+
+    @Column(nullable = false)
+    private double timeTaken;
 }
