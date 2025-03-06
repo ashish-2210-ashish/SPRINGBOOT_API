@@ -1,7 +1,9 @@
 package com.example.Rider_Co.services;
 
-import com.example.Rider_Co.models.ride;
-import com.example.Rider_Co.models.rider;
+import com.example.Rider_Co.models.Ride;
+import com.example.Rider_Co.models.Rider;
+import com.example.Rider_Co.repositories.RideRepository;
+import com.example.Rider_Co.repositories.RiderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,10 @@ import java.util.Optional;
 public class RiderService {
 
     @Autowired
-    private com.example.Rider_Co.repositories.riderRepository riderRepository;
+    private RiderRepository riderRepository;
 
     @Autowired
-    private com.example.Rider_Co.repositories.rideRepository rideRepository;
+    private RideRepository rideRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(RiderService.class);
 
@@ -25,7 +27,7 @@ public class RiderService {
      * Fetches all riders from the database.
      * @return List of riders.
      */
-    public List<rider> getAllRiders() {
+    public List<Rider> getAllRiders() {
         logger.info("Fetching all riders from the database");
         return riderRepository.findAll();
     }
@@ -35,11 +37,11 @@ public class RiderService {
      * @param riderId The ID of the rider.
      * @return Rider object or an empty Rider if not found.
      */
-    public rider getRiderByID(int riderId) {
+    public Rider getRiderByID(int riderId) {
         return riderRepository.findById(riderId)
                 .orElseGet(() -> {
                     logger.warn("Rider with ID: {} not found", riderId);
-                    return new rider();
+                    return new Rider();
                 });
     }
 
@@ -48,7 +50,7 @@ public class RiderService {
      * @param rider The Rider object to add.
      * @return Status message.
      */
-    public String addRider(rider rider) {
+    public String addRider(Rider rider) {
         riderRepository.save(rider);
         logger.info("Rider with ID: {} added successfully", rider.getRiderId());
         return "Successfully added the rider with ID: " + rider.getRiderId();
@@ -59,7 +61,7 @@ public class RiderService {
      * @param rider The Rider object with updated information.
      * @return Status message.
      */
-    public String updateRider(rider rider) {
+    public String updateRider(Rider rider) {
         if (!riderRepository.existsById(rider.getRiderId())) {
             logger.warn("Rider with ID: {} not found. Update failed.", rider.getRiderId());
             return "Rider with ID: " + rider.getRiderId() + " does not exist.";
@@ -94,21 +96,21 @@ public class RiderService {
      * @return Status message.
      */
     public String matchDrivers(int riderId, double endX, double endY) {
-        rider rider = riderRepository.findById(riderId).orElse(null);
+        Rider rider = riderRepository.findById(riderId).orElse(null);
         if (rider == null) {
             logger.warn("Matching failed: Rider with ID {} not found.", riderId);
             return "RIDER_NOT_FOUND";
         }
 
         // Check if the rider already has an ongoing ride
-        Optional<ride> existingRide = rideRepository.findByRiderIdAndIsCompleted(riderId, false);
+        Optional<Ride> existingRide = rideRepository.findByRiderIdAndIsCompleted(riderId, false);
         if (existingRide.isPresent()) {
             logger.warn("Rider with ID: {} already has an active ride.", riderId);
             return "RIDE_ALREADY_EXISTS_FOR_RIDER " + riderId;
         }
 
         // Create a new ride request
-        ride ride = new ride();
+        Ride ride = new Ride();
         ride.setDriverId(0); // Initially unassigned
         ride.setRiderId(riderId);
         ride.setStartX(rider.getX());
@@ -117,7 +119,7 @@ public class RiderService {
         ride.setEndY(endY);
         ride.setRideFare(0);
         ride.setTimeTaken(0);
-        ride.setCompleted(false);
+
 
         rideRepository.save(ride);
         logger.info("Ride created for rider ID: {} with destination ({}, {})", riderId, endX, endY);

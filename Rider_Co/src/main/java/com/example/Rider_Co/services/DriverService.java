@@ -1,7 +1,9 @@
 package com.example.Rider_Co.services;
 
-import com.example.Rider_Co.models.driver;
-import com.example.Rider_Co.models.ride;
+import com.example.Rider_Co.models.Driver;
+import com.example.Rider_Co.models.Ride;
+import com.example.Rider_Co.repositories.DriverRepository;
+import com.example.Rider_Co.repositories.RideRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,10 @@ import java.util.List;
 public class DriverService {
 
     @Autowired
-    private com.example.Rider_Co.repositories.driverRepository driverRepository;
+    private DriverRepository driverRepository;
 
     @Autowired
-    private com.example.Rider_Co.repositories.rideRepository rideRepository;
+    private RideRepository rideRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(DriverService.class);
 
@@ -25,7 +27,7 @@ public class DriverService {
      * Retrieves all drivers from the database.
      * @return List of all drivers.
      */
-    public List<driver> GetAllDrivers() {
+    public List<Driver> GetAllDrivers() {
         logger.info("Fetching all drivers from the database");
         return driverRepository.findAll();
     }
@@ -35,13 +37,13 @@ public class DriverService {
      * @param driverId ID of the driver.
      * @return Driver object or an empty Driver if not found.
      */
-    public driver GetDriverByID(int driverId) {
+    public Driver GetDriverByID(int driverId) {
         if (driverRepository.existsById(driverId)) {
             logger.info("Fetching driver with ID: {}", driverId);
-            return driverRepository.findById(driverId).orElse(new driver());
+            return driverRepository.findById(driverId).orElse(new Driver());
         } else {
             logger.warn("Driver with ID: {} does not exist", driverId);
-            return new driver();
+            return new Driver();
         }
     }
 
@@ -50,7 +52,7 @@ public class DriverService {
      * @param driver Driver object to be added.
      * @return Success message.
      */
-    public String AddDriver(driver driver) {
+    public String AddDriver(Driver driver) {
         driverRepository.save(driver);
         logger.info("Driver with ID: {} added successfully", driver.getDriverId());
         return "Successfully added the driver with ID: " + driver.getDriverId();
@@ -61,7 +63,7 @@ public class DriverService {
      * @param driver Driver object with updated details.
      * @return Success or failure message.
      */
-    public String UpdateDriver(driver driver) {
+    public String UpdateDriver(Driver driver) {
         if (driverRepository.existsById(driver.getDriverId())) {
             driverRepository.save(driver);
             logger.info("Driver with ID: {} updated successfully", driver.getDriverId());
@@ -95,7 +97,7 @@ public class DriverService {
      * @return Status message of ride acceptance.
      */
     public String AcceptRide(int driverId, int rideId) {
-        ride selectedRide = rideRepository.findById(rideId).orElse(null);
+        Ride selectedRide = rideRepository.findById(rideId).orElse(null);
 
         if (selectedRide == null) {
             logger.warn("Ride with ID: {} is already assigned or does not exist", rideId);
@@ -107,7 +109,7 @@ public class DriverService {
         logger.info("Ride with ID: {} assigned to driver ID: {}", rideId, driverId);
 
         // Mark driver as unavailable after accepting a ride
-        driver driver = driverRepository.findById(driverId).orElse(null);
+        Driver driver = driverRepository.findById(driverId).orElse(null);
         if (driver != null) {
             driver.setAvailable(false);
             driverRepository.save(driver);
@@ -122,8 +124,8 @@ public class DriverService {
      * @param driverId ID of the driver.
      * @return List of available rides sorted by distance.
      */
-    public List<ride> getAvailableRidesForDriver(int driverId) {
-        driver driver = driverRepository.findById(driverId).orElse(null);
+    public List<Ride> getAvailableRidesForDriver(int driverId) {
+        Driver driver = driverRepository.findById(driverId).orElse(null);
 
         if (driver == null) {
             logger.warn("Driver with ID: {} does not exist", driverId);
@@ -138,7 +140,7 @@ public class DriverService {
         double driverX = driver.getX();
         double driverY = driver.getY();
 
-        List<ride> availableRides = rideRepository.findAllUnassignedRide();
+        List<Ride> availableRides = rideRepository.findAllUnassignedRide();
 
         // Sort rides based on the distance from the driver
         availableRides.sort((r1, r2) -> {

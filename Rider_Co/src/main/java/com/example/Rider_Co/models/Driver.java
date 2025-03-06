@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name ="Drivers")
 @Entity
-public class driver {
+public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int DriverId;
+    private int driverId;
 
     @Column(nullable = false)
     private double X;

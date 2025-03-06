@@ -1,7 +1,7 @@
 package com.example.Rider_Co.controllers;
 
-import com.example.Rider_Co.models.driver;
-import com.example.Rider_Co.models.ride;
+import com.example.Rider_Co.models.Driver;
+import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.services.DriverService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/driver")
-public class driverController {
+public class DriverController {
 
-    private static final Logger logger = LoggerFactory.getLogger(driverController.class);
+    private static final Logger logger = LoggerFactory.getLogger(DriverController.class);
 
     @Autowired
     private DriverService driverService;
@@ -24,7 +24,7 @@ public class driverController {
      * @return List of drivers
      */
     @GetMapping
-    public List<driver> getAllDrivers() {
+    public List<Driver> getAllDrivers() {
         logger.info("Fetching all drivers");
         return driverService.GetAllDrivers();
     }
@@ -35,7 +35,7 @@ public class driverController {
      * @return Driver object
      */
     @GetMapping("/{driverId}")
-    public driver getDriverById(@PathVariable int driverId) {
+    public Driver getDriverById(@PathVariable int driverId) {
         logger.info("Fetching driver with ID: {}", driverId);
         return driverService.GetDriverByID(driverId);
     }
@@ -46,7 +46,7 @@ public class driverController {
      * @return Success message
      */
     @PostMapping
-    public String addDriver(@RequestBody driver driver) {
+    public String addDriver(@RequestBody Driver driver) {
         logger.info("Adding new driver: {}", driver);
         return driverService.AddDriver(driver);
     }
@@ -58,7 +58,7 @@ public class driverController {
      * @return Success message
      */
     @PutMapping("/{driverId}")
-    public String updateDriver(@PathVariable int driverId, @RequestBody driver driver) {
+    public String updateDriver(@PathVariable int driverId, @RequestBody Driver driver) {
         logger.info("Updating driver with ID: {}", driverId);
         driver.setDriverId(driverId);
         driverService.UpdateDriver(driver);
@@ -94,7 +94,7 @@ public class driverController {
      * @return List of available rides
      */
     @GetMapping("/availableRides/{driverId}")
-    public List<ride> getAvailableRides(@PathVariable int driverId) {
+    public List<Ride> getAvailableRides(@PathVariable int driverId) {
         logger.info("Fetching available rides for driver with ID: {}", driverId);
         return driverService.getAvailableRidesForDriver(driverId);
     }
