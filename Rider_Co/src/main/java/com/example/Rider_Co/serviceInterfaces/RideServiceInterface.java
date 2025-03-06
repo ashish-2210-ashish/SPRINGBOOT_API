@@ -1,4 +1,19 @@
 package com.example.Rider_Co.serviceInterfaces;
 
-public class RideServiceInterface {
+import com.example.Rider_Co.models.Ride;
+
+import java.util.List;
+
+public interface RideServiceInterface {
+    List<Ride> getAllRides();
+    Ride getRideByID(int rideId);
+    String deleteRide(int rideId);
+    String stopRide(int rideId, double timeTaken);
+    String cancelRide(int rideId);
+    String billRide(int rideId);
+    double calculateDistance(double x1, double y1, double x2, double y2);
+    List<Ride> getAllRidesByRider(int riderId);
+    List<Ride> getAllRidesByDriver(int driverId);
+    String startRide(int driverId,int rideId);
+
 }

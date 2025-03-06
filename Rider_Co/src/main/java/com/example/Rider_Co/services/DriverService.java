@@ -5,6 +5,7 @@ import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
+import com.example.Rider_Co.serviceInterfaces.DriverServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DriverService {
+public class DriverService implements DriverServiceInterface {
 
     @Autowired
     private DriverRepository driverRepository;
@@ -28,6 +29,7 @@ public class DriverService {
      * Retrieves all drivers from the database.
      * @return List of all drivers.
      */
+    @Override
     public List<Driver> GetAllDrivers() {
         logger.info("Fetching all drivers from the database");
         return driverRepository.findAll();
@@ -38,6 +40,7 @@ public class DriverService {
      * @param driverId ID of the driver.
      * @return Driver object or an empty Driver if not found.
      */
+    @Override
     public Driver GetDriverByID(int driverId) {
         if (driverRepository.existsById(driverId)) {
             logger.info("Fetching driver with ID: {}", driverId);
@@ -53,6 +56,7 @@ public class DriverService {
      * @param driver Driver object to be added.
      * @return Success message.
      */
+    @Override
     public String AddDriver(Driver driver) {
         driverRepository.save(driver);
         logger.info("Driver with ID: {} added successfully", driver.getDriverId());
@@ -64,6 +68,7 @@ public class DriverService {
      * @param driver Driver object with updated details.
      * @return Success or failure message.
      */
+    @Override
     public String UpdateDriver(Driver driver) {
         if (driverRepository.existsById(driver.getDriverId())) {
             driverRepository.save(driver);
@@ -80,6 +85,7 @@ public class DriverService {
      * @param driverId ID of the driver to be deleted.
      * @return Success or failure message.
      */
+    @Override
     public String DeleteDriver(int driverId) {
         if (driverRepository.existsById(driverId)) {
             driverRepository.deleteById(driverId);
@@ -97,6 +103,7 @@ public class DriverService {
      * @param rideId ID of the ride.
      * @return Status message of ride acceptance.
      */
+    @Override
     public String AcceptRide(int driverId, int rideId) {
         Ride selectedRide = rideRepository.findById(rideId).orElse(null);
 
@@ -127,6 +134,7 @@ public class DriverService {
      * @param driverId ID of the driver.
      * @return List of available rides sorted by distance.
      */
+    @Override
     public List<Ride> getAvailableRidesForDriver(int driverId) {
         Driver driver = driverRepository.findById(driverId).orElse(null);
 
@@ -164,7 +172,8 @@ public class DriverService {
      * @param y2 Y-coordinate of the second point.
      * @return Distance between the two points.
      */
-    private double calculateDistance(double x1, double y1, double x2, double y2) {
+    @Override
+    public double calculateDistance(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 }

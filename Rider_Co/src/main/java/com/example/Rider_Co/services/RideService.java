@@ -5,6 +5,7 @@ import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
+import com.example.Rider_Co.serviceInterfaces.RideServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class RideService {
+public class RideService implements RideServiceInterface {
 
     @Autowired
     private RideRepository rideRepository;
@@ -26,11 +27,13 @@ public class RideService {
 
     private static final Logger logger = LoggerFactory.getLogger(RideService.class);
 
+    @Override
     public List<Ride> getAllRides() {
         logger.info("Fetching all rides from the database");
         return rideRepository.findAll();
     }
 
+    @Override
     public Ride getRideByID(int rideId) {
         return rideRepository.findById(rideId)
                 .orElseGet(() -> {
@@ -41,7 +44,7 @@ public class RideService {
 
 
 
-
+    @Override
     public String deleteRide(int rideId) {
         if (!rideRepository.existsById(rideId)) {
             logger.warn("Ride with ID: {} does not exist, deletion failed.", rideId);
@@ -53,6 +56,7 @@ public class RideService {
         return "Successfully deleted ride with ID: " + rideId;
     }
 
+    @Override
     public String stopRide(int rideId, double timeTaken) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
 
@@ -88,6 +92,7 @@ public class RideService {
         return "Ride " + rideId + " successfully stopped.";
     }
 
+    @Override
     public String cancelRide(int rideId) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
         if (currentRide == null) {
@@ -112,6 +117,7 @@ public class RideService {
 
     }
 
+    @Override
     public String billRide(int rideId) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
         if (currentRide == null) {
@@ -140,6 +146,7 @@ public class RideService {
         return "Total fare of the ride " + rideId + " is Rs. " + totalFare;
     }
 
+    @Override
     private void releaseDriver(int driverId) {
         if (driverId == 0) return;
 
@@ -150,20 +157,24 @@ public class RideService {
         });
     }
 
-    private double calculateDistance(double x1, double y1, double x2, double y2) {
+    @Override
+    public double calculateDistance(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
+    @Override
     public List<Ride> getAllRidesByRider(int riderId) {
         logger.info("Fetching all rides for rider {}", riderId);
         return rideRepository.findByRiderId(riderId);
     }
 
+    @Override
     public List<Ride> getAllRidesByDriver(int driverId) {
         logger.info("Fetching all rides for driver {}", driverId);
         return rideRepository.findByDriverId(driverId);
     }
 
+    @Override
     public String startRide(int driverId,int rideId) {
         Ride selectedRide=rideRepository.findById(rideId).orElse(null);
         if (selectedRide == null) {
