@@ -1,5 +1,6 @@
 package com.example.Rider_Co.services;
 
+import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
 import com.example.Rider_Co.repositories.DriverRepository;
@@ -54,6 +55,7 @@ public class RideService {
 
     public String stopRide(int rideId, double timeTaken) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
+
         if (currentRide == null) {
             logger.warn("Ride {} not found, cannot stop.", rideId);
             return "Ride " + rideId + " does not exist.";
@@ -64,10 +66,20 @@ public class RideService {
             return "Ride " + rideId + " is already completed.";
         }
 
+        double currentCoordinateX=currentRide.getDestinationCoordinateX();
+        double currentCoordinateY=currentRide.getDestinationCoordinateY();
+
+
         currentRide.setCompleted(true);
         currentRide.setTimeTaken(timeTaken);
         currentRide.setStatus(RideStatus.COMPLETED);
         rideRepository.save(currentRide);
+
+        Driver currentDriver = driverRepository.findById(currentRide.getDriverId()).orElse(null);
+        assert currentDriver != null;
+        currentDriver.setCoordinateX(currentCoordinateX);
+        currentDriver.setCoordinateY(currentCoordinateY);
+        driverRepository.save(currentDriver);
 
         // Free up the driver
         releaseDriver(currentRide.getDriverId());
