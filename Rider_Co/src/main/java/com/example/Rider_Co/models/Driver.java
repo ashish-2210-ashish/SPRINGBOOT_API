@@ -14,10 +14,10 @@ public class Driver {
     private int driverId;
 
     @Column(nullable = false)
-    private double X;
+    private double coordinateX;
 
     @Column(nullable = false)
-    private double y;
+    private double coordinateY;
 
     @Column(nullable = true)
     private boolean available=true;

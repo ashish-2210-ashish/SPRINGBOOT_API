@@ -85,6 +85,12 @@ public class RideController {
         return rideService.stopRide(rideId, timeTaken);
     }
 
+    @PutMapping("/start/{driverId}/{rideId}")
+    public String startRide(@PathVariable int driverId,@PathVariable int rideId) {
+        logger.info("Starting the  ride with ID: {} by Driver with ID : {} ..", rideId,driverId);
+        return rideService.startRide(driverId,rideId);
+    }
+
     /**
      * Generates the bill for a ride.
      * @param rideId ID of the ride to bill

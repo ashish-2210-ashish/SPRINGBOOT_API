@@ -91,11 +91,11 @@ public class RiderService {
     /**
      * Matches a rider with available drivers based on their start and destination coordinates.
      * @param riderId The ID of the rider.
-     * @param endX Destination X-coordinate.
-     * @param endY Destination Y-coordinate.
+     * @param destinationCoordinateX Destination X-coordinate.
+     * @param destinationCoordinateY Destination Y-coordinate.
      * @return Status message.
      */
-    public String matchDrivers(int riderId, double endX, double endY) {
+    public String matchDrivers(int riderId, double destinationCoordinateX, double destinationCoordinateY) {
         Rider rider = riderRepository.findById(riderId).orElse(null);
         if (rider == null) {
             logger.warn("Matching failed: Rider with ID {} not found.", riderId);
@@ -113,16 +113,16 @@ public class RiderService {
         Ride ride = new Ride();
         ride.setDriverId(0); // Initially unassigned
         ride.setRiderId(riderId);
-        ride.setStartX(rider.getX());
-        ride.setStartY(rider.getY());
-        ride.setEndX(endX);
-        ride.setEndY(endY);
+        ride.setPickupCoordinateX(rider.getCoordinateX());
+        ride.setPickupCoordinateY(rider.getCoordinateY());
+        ride.setDestinationCoordinateX(destinationCoordinateX);
+        ride.setDestinationCoordinateY(destinationCoordinateY);
         ride.setRideFare(0);
         ride.setTimeTaken(0);
 
 
         rideRepository.save(ride);
-        logger.info("Ride created for rider ID: {} with destination ({}, {})", riderId, endX, endY);
+        logger.info("Ride created for rider ID: {} with destination ({}, {})", riderId, destinationCoordinateX, destinationCoordinateY);
         return "Successfully added the ride for rider " + riderId;
     }
 }

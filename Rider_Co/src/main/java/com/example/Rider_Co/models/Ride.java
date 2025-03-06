@@ -21,16 +21,16 @@ public class Ride {
     private int driverId;
 
     @Column(nullable = false)
-    private double startX;
+    private double pickupCoordinateX;
 
     @Column(nullable = false)
-    private double startY;
+    private double pickupCoordinateY;
 
     @Column(nullable = false)
-    private double endX;
+    private double destinationCoordinateX;
 
     @Column(nullable = false)
-    private double endY;
+    private double destinationCoordinateY;
 
     @Column(nullable = false)
     @ColumnDefault("false")

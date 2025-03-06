@@ -1,6 +1,7 @@
 package com.example.Rider_Co.services;
 
 import com.example.Rider_Co.models.Ride;
+import com.example.Rider_Co.models.RideStatus;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
 import org.slf4j.Logger;
@@ -65,6 +66,7 @@ public class RideService {
 
         currentRide.setCompleted(true);
         currentRide.setTimeTaken(timeTaken);
+        currentRide.setStatus(RideStatus.COMPLETED);
         rideRepository.save(currentRide);
 
         // Free up the driver
@@ -86,10 +88,16 @@ public class RideService {
             return "Ride " + rideId + " is already completed.";
         }
 
-        releaseDriver(currentRide.getDriverId());
-        logger.info("Ride {} canceled successfully.", rideId);
+        if (currentRide.getRiderId()!=0) {
+            releaseDriver(currentRide.getDriverId());
+            logger.info("Ride {} canceled successfully.", rideId);
+        }
 
-        return deleteRide(rideId);
+        currentRide.setStatus(RideStatus.CANCELED);
+        rideRepository.save(currentRide);
+
+        return "Ride " + rideId + " successfully canceled.";
+
     }
 
     public String billRide(int rideId) {
@@ -105,8 +113,8 @@ public class RideService {
         }
 
         double distance = calculateDistance(
-                currentRide.getStartX(), currentRide.getStartY(),
-                currentRide.getEndX(), currentRide.getEndY()
+                currentRide.getPickupCoordinateX(), currentRide.getPickupCoordinateY(),
+                currentRide.getDestinationCoordinateX(), currentRide.getDestinationCoordinateY()
         );
         double timeFare = 2 * currentRide.getTimeTaken();
         double distanceFare = 6.5 * distance;
@@ -142,5 +150,23 @@ public class RideService {
     public List<Ride> getAllRidesByDriver(int driverId) {
         logger.info("Fetching all rides for driver {}", driverId);
         return rideRepository.findByDriverId(driverId);
+    }
+
+    public String startRide(int driverId,int rideId) {
+        Ride selectedRide=rideRepository.findById(rideId).orElse(null);
+        if (selectedRide == null) {
+            logger.warn("Ride {} not found, cannot start it .", rideId);
+            return "Ride " + rideId + " does not exist.";
+        }
+
+        if (selectedRide.getStatus()==RideStatus.AWAITING_PICKUP && selectedRide.getDriverId()==driverId ){
+            selectedRide.setStatus(RideStatus.STARTED);
+            rideRepository.save(selectedRide);
+            return "Ride with ID : "+ rideId+" is started successfully";
+        }
+
+        return "Ride with ID : "+ rideId+" cannot be started because of either status is not RideStatus.AWAITING_PICKUP or trying to started a unassigned ride ";
+
+
     }
 }

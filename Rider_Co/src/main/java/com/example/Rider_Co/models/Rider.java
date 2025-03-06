@@ -13,7 +13,7 @@ public class Rider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int riderId;
     @Column(nullable = false)
-    double X;
+    double coordinateX;
     @Column(nullable = false)
-    double Y;
+    double coordinateY;
 }

@@ -4,5 +4,6 @@ public enum RideStatus {
     AVAILABLE_RIDE,
     AWAITING_PICKUP,
     CANCELED,
-    COMPLETED
+    COMPLETED,
+    STARTED
 }

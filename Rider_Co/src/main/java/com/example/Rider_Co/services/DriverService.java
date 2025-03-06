@@ -2,6 +2,7 @@ package com.example.Rider_Co.services;
 
 import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
+import com.example.Rider_Co.models.RideStatus;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
 import org.slf4j.Logger;
@@ -105,6 +106,8 @@ public class DriverService {
         }
 
         selectedRide.setDriverId(driverId);
+        selectedRide.setStatus(RideStatus.AWAITING_PICKUP);
+        selectedRide.setRideAccepted(true);
         rideRepository.save(selectedRide);
         logger.info("Ride with ID: {} assigned to driver ID: {}", rideId, driverId);
 
@@ -137,15 +140,15 @@ public class DriverService {
             return new ArrayList<>();
         }
 
-        double driverX = driver.getX();
-        double driverY = driver.getY();
+        double driverX = driver.getCoordinateX();
+        double driverY = driver.getCoordinateY();
 
         List<Ride> availableRides = rideRepository.findAllUnassignedRide();
 
         // Sort rides based on the distance from the driver
         availableRides.sort((r1, r2) -> {
-            double d1 = calculateDistance(driverX, driverY, r1.getStartX(), r1.getStartY());
-            double d2 = calculateDistance(driverX, driverY, r2.getStartX(), r2.getStartY());
+            double d1 = calculateDistance(driverX, driverY, r1.getPickupCoordinateX(), r1.getPickupCoordinateY());
+            double d2 = calculateDistance(driverX, driverY, r2.getDestinationCoordinateX(), r2.getDestinationCoordinateY());
             return Double.compare(d1, d2);
         });
 
