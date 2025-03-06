@@ -111,8 +111,8 @@ public class RiderService {
 
         // Create a new ride request
         Ride ride = new Ride();
-        ride.setDriverId(0); // Initially unassigned
-        ride.setRiderId(riderId);
+        ride.getDriver().setDriverId(0); // Initially unassigned
+        ride.getRider().setRiderId(riderId);
         ride.setPickupCoordinateX(rider.getCoordinateX());
         ride.setPickupCoordinateY(rider.getCoordinateY());
         ride.setDestinationCoordinateX(destinationCoordinateX);

@@ -13,12 +13,13 @@ public class Ride {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int  rideId;
 
-    @Column(nullable = false)
-    private int riderId;
+    @ManyToOne
+    @JoinColumn(name = "rider_id", nullable = false)
+    private Rider rider;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private int driverId;
+    @ManyToOne
+    @JoinColumn(name = "driver_id")
+    private Driver driver;
 
     @Column(nullable = false)
     private double pickupCoordinateX;

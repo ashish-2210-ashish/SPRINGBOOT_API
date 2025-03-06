@@ -105,7 +105,7 @@ public class DriverService {
             return "Ride is already assigned to someone else.";
         }
 
-        selectedRide.setDriverId(driverId);
+        selectedRide.getDriver().setDriverId(driverId);
         selectedRide.setStatus(RideStatus.AWAITING_PICKUP);
         selectedRide.setRideAccepted(true);
         rideRepository.save(selectedRide);

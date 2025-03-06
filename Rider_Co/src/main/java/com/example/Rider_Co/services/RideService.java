@@ -75,14 +75,14 @@ public class RideService {
         currentRide.setStatus(RideStatus.COMPLETED);
         rideRepository.save(currentRide);
 
-        Driver currentDriver = driverRepository.findById(currentRide.getDriverId()).orElse(null);
+        Driver currentDriver = driverRepository.findById(currentRide.getDriver().getDriverId()).orElse(null);
         assert currentDriver != null;
         currentDriver.setCoordinateX(currentCoordinateX);
         currentDriver.setCoordinateY(currentCoordinateY);
         driverRepository.save(currentDriver);
 
         // Free up the driver
-        releaseDriver(currentRide.getDriverId());
+        releaseDriver(currentRide.getDriver().getDriverId());
 
         logger.info("Ride {} stopped successfully.", rideId);
         return "Ride " + rideId + " successfully stopped.";
@@ -100,8 +100,8 @@ public class RideService {
             return "Ride " + rideId + " is already completed.";
         }
 
-        if (currentRide.getRiderId()!=0) {
-            releaseDriver(currentRide.getDriverId());
+        if (currentRide.getRider().getRiderId()!=0) {
+            releaseDriver(currentRide.getDriver().getDriverId());
             logger.info("Ride {} canceled successfully.", rideId);
         }
 
@@ -171,7 +171,7 @@ public class RideService {
             return "Ride " + rideId + " does not exist.";
         }
 
-        if (selectedRide.getStatus()==RideStatus.AWAITING_PICKUP && selectedRide.getDriverId()==driverId ){
+        if (selectedRide.getStatus()==RideStatus.AWAITING_PICKUP && selectedRide.getDriver().getDriverId()==driverId ){
             selectedRide.setStatus(RideStatus.STARTED);
             rideRepository.save(selectedRide);
             return "Ride with ID : "+ rideId+" is started successfully";
