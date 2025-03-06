@@ -1,8 +1,8 @@
-package com.example.Rider_Co.Controller;
+package com.example.Rider_Co.controllers;
 
-import com.example.Rider_Co.Dto.MatchRequestDto;
-import com.example.Rider_Co.Model.Rider;
-import com.example.Rider_Co.Service.RiderService;
+import com.example.Rider_Co.dto.matchRequestDto;
+import com.example.Rider_Co.models.rider;
+import com.example.Rider_Co.services.RiderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/rider")
-public class RiderController {
+public class riderController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RiderController.class);
+    private static final Logger logger = LoggerFactory.getLogger(riderController.class);
 
     @Autowired
     private RiderService riderService;
@@ -24,7 +24,7 @@ public class RiderController {
      * @return List of riders
      */
     @GetMapping
-    public List<Rider> getAllRiders() {
+    public List<rider> getAllRiders() {
         logger.info("Fetching all riders");
         return riderService.getAllRiders();
     }
@@ -35,7 +35,7 @@ public class RiderController {
      * @return Rider object
      */
     @GetMapping("/{riderId}")
-    public Rider getRiderById(@PathVariable int riderId) {
+    public rider getRiderById(@PathVariable int riderId) {
         logger.info("Fetching rider with ID: {}", riderId);
         return riderService.getRiderByID(riderId);
     }
@@ -46,7 +46,7 @@ public class RiderController {
      * @return Success message
      */
     @PostMapping
-    public String addRider(@RequestBody Rider rider) {
+    public String addRider(@RequestBody rider rider) {
         logger.info("Adding new rider: {}", rider);
         return riderService.addRider(rider);
     }
@@ -58,7 +58,7 @@ public class RiderController {
      * @return Success message
      */
     @PutMapping("/{riderId}")
-    public String updateRider(@PathVariable int riderId, @RequestBody Rider rider) {
+    public String updateRider(@PathVariable int riderId, @RequestBody rider rider) {
         logger.info("Updating rider with ID: {}", riderId);
         rider.setRiderId(riderId);
         riderService.updateRider(rider);
@@ -83,7 +83,7 @@ public class RiderController {
      * @return Match result message
      */
     @PostMapping(value = "/match/{riderId}", consumes = "application/json")
-    public String matchDrivers(@PathVariable int riderId, @RequestBody MatchRequestDto matchRequestDto) {
+    public String matchDrivers(@PathVariable int riderId, @RequestBody matchRequestDto matchRequestDto) {
         double endX = matchRequestDto.getEndX();
         double endY = matchRequestDto.getEndY();
         logger.info("Matching drivers for rider ID: {} with destination coordinates ({}, {})", riderId, endX, endY);

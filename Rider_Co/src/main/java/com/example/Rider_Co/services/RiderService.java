@@ -1,9 +1,7 @@
-package com.example.Rider_Co.Service;
+package com.example.Rider_Co.services;
 
-import com.example.Rider_Co.Model.Ride;
-import com.example.Rider_Co.Model.Rider;
-import com.example.Rider_Co.Repository.RideRepository;
-import com.example.Rider_Co.Repository.RiderRepository;
+import com.example.Rider_Co.models.ride;
+import com.example.Rider_Co.models.rider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +14,10 @@ import java.util.Optional;
 public class RiderService {
 
     @Autowired
-    private RiderRepository riderRepository;
+    private com.example.Rider_Co.repositories.riderRepository riderRepository;
 
     @Autowired
-    private RideRepository rideRepository;
+    private com.example.Rider_Co.repositories.rideRepository rideRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(RiderService.class);
 
@@ -27,7 +25,7 @@ public class RiderService {
      * Fetches all riders from the database.
      * @return List of riders.
      */
-    public List<Rider> getAllRiders() {
+    public List<rider> getAllRiders() {
         logger.info("Fetching all riders from the database");
         return riderRepository.findAll();
     }
@@ -37,11 +35,11 @@ public class RiderService {
      * @param riderId The ID of the rider.
      * @return Rider object or an empty Rider if not found.
      */
-    public Rider getRiderByID(int riderId) {
+    public rider getRiderByID(int riderId) {
         return riderRepository.findById(riderId)
                 .orElseGet(() -> {
                     logger.warn("Rider with ID: {} not found", riderId);
-                    return new Rider();
+                    return new rider();
                 });
     }
 
@@ -50,7 +48,7 @@ public class RiderService {
      * @param rider The Rider object to add.
      * @return Status message.
      */
-    public String addRider(Rider rider) {
+    public String addRider(rider rider) {
         riderRepository.save(rider);
         logger.info("Rider with ID: {} added successfully", rider.getRiderId());
         return "Successfully added the rider with ID: " + rider.getRiderId();
@@ -61,7 +59,7 @@ public class RiderService {
      * @param rider The Rider object with updated information.
      * @return Status message.
      */
-    public String updateRider(Rider rider) {
+    public String updateRider(rider rider) {
         if (!riderRepository.existsById(rider.getRiderId())) {
             logger.warn("Rider with ID: {} not found. Update failed.", rider.getRiderId());
             return "Rider with ID: " + rider.getRiderId() + " does not exist.";
@@ -96,21 +94,21 @@ public class RiderService {
      * @return Status message.
      */
     public String matchDrivers(int riderId, double endX, double endY) {
-        Rider rider = riderRepository.findById(riderId).orElse(null);
+        rider rider = riderRepository.findById(riderId).orElse(null);
         if (rider == null) {
             logger.warn("Matching failed: Rider with ID {} not found.", riderId);
             return "RIDER_NOT_FOUND";
         }
 
         // Check if the rider already has an ongoing ride
-        Optional<Ride> existingRide = rideRepository.findByRiderIdAndIsCompleted(riderId, false);
+        Optional<ride> existingRide = rideRepository.findByRiderIdAndIsCompleted(riderId, false);
         if (existingRide.isPresent()) {
             logger.warn("Rider with ID: {} already has an active ride.", riderId);
             return "RIDE_ALREADY_EXISTS_FOR_RIDER " + riderId;
         }
 
         // Create a new ride request
-        Ride ride = new Ride();
+        ride ride = new ride();
         ride.setDriverId(0); // Initially unassigned
         ride.setRiderId(riderId);
         ride.setStartX(rider.getX());

@@ -1,14 +1,13 @@
-package com.example.Rider_Co.Model;
+package com.example.Rider_Co.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @NoArgsConstructor
 @Entity
-public class Ride {
+public class ride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int  rideId;

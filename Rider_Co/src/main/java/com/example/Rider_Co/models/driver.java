@@ -1,4 +1,4 @@
-package com.example.Rider_Co.Model;
+package com.example.Rider_Co.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -6,14 +6,19 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@Table(name = "Riders")
+@Table(name ="Drivers")
 @Entity
-public class Rider {
+public class driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int RiderId;
+    private int DriverId;
+
     @Column(nullable = false)
-    double X;
+    private double X;
+
     @Column(nullable = false)
-    double Y;
+    private double y;
+
+    @Column(nullable = true)
+    private boolean available=true;
 }

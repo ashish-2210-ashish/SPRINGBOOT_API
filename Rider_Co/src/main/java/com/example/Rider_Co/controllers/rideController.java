@@ -1,7 +1,7 @@
-package com.example.Rider_Co.Controller;
+package com.example.Rider_Co.controllers;
 
-import com.example.Rider_Co.Model.Ride;
-import com.example.Rider_Co.Service.RideService;
+import com.example.Rider_Co.models.ride;
+import com.example.Rider_Co.services.RideService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ride")
-public class RideController {
+public class rideController {
 
-    private static final Logger logger = LoggerFactory.getLogger(RideController.class);
+    private static final Logger logger = LoggerFactory.getLogger(rideController.class);
 
     @Autowired
     RideService rideService;
@@ -23,7 +23,7 @@ public class RideController {
      * @return List of all rides
      */
     @GetMapping
-    public List<Ride> getAllRide() {
+    public List<ride> getAllRide() {
         logger.info("Fetching all rides");
         return rideService.getAllRides();
     }
@@ -34,7 +34,7 @@ public class RideController {
      * @return List of rides for the rider
      */
     @GetMapping("/rider/{riderId}")
-    public List<Ride> getAllRideByRider(@PathVariable int riderId) {
+    public List<ride> getAllRideByRider(@PathVariable int riderId) {
         logger.info("Fetching all rides for rider with ID: {}", riderId);
         return rideService.getAllRidesByRider(riderId);
     }
@@ -45,7 +45,7 @@ public class RideController {
      * @return List of rides for the driver
      */
     @GetMapping("/driver/{driverId}")
-    public List<Ride> getAllRideByDriver(@PathVariable int driverId) {
+    public List<ride> getAllRideByDriver(@PathVariable int driverId) {
         logger.info("Fetching all rides for driver with ID: {}", driverId);
         return rideService.getAllRidesByDriver(driverId);
     }
@@ -56,7 +56,7 @@ public class RideController {
      * @return Ride object
      */
     @GetMapping("/{rideId}")
-    public Ride getRideById(@PathVariable int rideId) {
+    public ride getRideById(@PathVariable int rideId) {
         logger.info("Fetching ride with ID: {}", rideId);
         return rideService.getRideByID(rideId);
     }

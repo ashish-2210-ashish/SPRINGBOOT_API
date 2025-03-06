@@ -1,9 +1,6 @@
-package com.example.Rider_Co.Service;
+package com.example.Rider_Co.services;
 
-import com.example.Rider_Co.Model.Driver;
-import com.example.Rider_Co.Model.Ride;
-import com.example.Rider_Co.Repository.DriverRepository;
-import com.example.Rider_Co.Repository.RideRepository;
+import com.example.Rider_Co.models.ride;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +12,26 @@ import java.util.List;
 public class RideService {
 
     @Autowired
-    private RideRepository rideRepository;
+    private com.example.Rider_Co.repositories.rideRepository rideRepository;
 
     @Autowired
-    private DriverRepository driverRepository;
+    private com.example.Rider_Co.repositories.driverRepository driverRepository;
 
     @Autowired
     private DriverService driverService;
 
     private static final Logger logger = LoggerFactory.getLogger(RideService.class);
 
-    public List<Ride> getAllRides() {
+    public List<ride> getAllRides() {
         logger.info("Fetching all rides from the database");
         return rideRepository.findAll();
     }
 
-    public Ride getRideByID(int rideId) {
+    public ride getRideByID(int rideId) {
         return rideRepository.findById(rideId)
                 .orElseGet(() -> {
                     logger.warn("Ride with ID {} not found.", rideId);
-                    return new Ride();
+                    return new ride();
                 });
     }
 
@@ -53,7 +50,7 @@ public class RideService {
     }
 
     public String stopRide(int rideId, double timeTaken) {
-        Ride currentRide = rideRepository.findById(rideId).orElse(null);
+        ride currentRide = rideRepository.findById(rideId).orElse(null);
         if (currentRide == null) {
             logger.warn("Ride {} not found, cannot stop.", rideId);
             return "Ride " + rideId + " does not exist.";
@@ -76,7 +73,7 @@ public class RideService {
     }
 
     public String cancelRide(int rideId) {
-        Ride currentRide = rideRepository.findById(rideId).orElse(null);
+        ride currentRide = rideRepository.findById(rideId).orElse(null);
         if (currentRide == null) {
             logger.warn("Ride {} not found, cannot cancel.", rideId);
             return "Ride " + rideId + " does not exist.";
@@ -94,7 +91,7 @@ public class RideService {
     }
 
     public String billRide(int rideId) {
-        Ride currentRide = rideRepository.findById(rideId).orElse(null);
+        ride currentRide = rideRepository.findById(rideId).orElse(null);
         if (currentRide == null) {
             logger.warn("Ride {} not found, cannot generate bill.", rideId);
             return "Ride " + rideId + " does not exist.";
@@ -135,12 +132,12 @@ public class RideService {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    public List<Ride> getAllRidesByRider(int riderId) {
+    public List<ride> getAllRidesByRider(int riderId) {
         logger.info("Fetching all rides for rider {}", riderId);
         return rideRepository.findByRiderId(riderId);
     }
 
-    public List<Ride> getAllRidesByDriver(int driverId) {
+    public List<ride> getAllRidesByDriver(int driverId) {
         logger.info("Fetching all rides for driver {}", driverId);
         return rideRepository.findByDriverId(driverId);
     }
