@@ -2,7 +2,7 @@ package com.example.Rider_Co.controllers;
 
 import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
-import com.example.Rider_Co.services.DriverService;
+import com.example.Rider_Co.serviceInterfaces.DriverServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class DriverController {
     private static final Logger logger = LoggerFactory.getLogger(DriverController.class);
 
     @Autowired
-    private DriverService driverService;
+    private DriverServiceInterface driverService;
 
     /**
      * Retrieves a list of all drivers.

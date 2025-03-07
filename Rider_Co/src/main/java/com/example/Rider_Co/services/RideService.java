@@ -5,6 +5,7 @@ import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.RideStatus;
 import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
+import com.example.Rider_Co.serviceInterfaces.DriverServiceInterface;
 import com.example.Rider_Co.serviceInterfaces.RideServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class RideService implements RideServiceInterface {
     private DriverRepository driverRepository;
 
     @Autowired
-    private DriverService driverService;
+    private DriverServiceInterface driverService;
 
     private static final Logger logger = LoggerFactory.getLogger(RideService.class);
 
@@ -95,6 +96,7 @@ public class RideService implements RideServiceInterface {
     @Override
     public String cancelRide(int rideId) {
         Ride currentRide = rideRepository.findById(rideId).orElse(null);
+
         if (currentRide == null) {
             logger.warn("Ride {} not found, cannot cancel.", rideId);
             return "Ride " + rideId + " does not exist.";
@@ -105,17 +107,29 @@ public class RideService implements RideServiceInterface {
             return "Ride " + rideId + " is already completed.";
         }
 
-        if (currentRide.getRider().getRiderId()!=0) {
-            releaseDriver(currentRide.getDriver().getDriverId());
-            logger.info("Ride {} canceled successfully.", rideId);
-        }
-
+        // Update ride status
         currentRide.setStatus(RideStatus.CANCELED);
+        currentRide.setCompleted(true);
         rideRepository.save(currentRide);
 
-        return "Ride " + rideId + " successfully canceled.";
+        // Check if Rider exists
+        if (currentRide.getRider() == null) {
+            logger.warn("Ride {} has no associated rider.", rideId);
+            return "Ride " + rideId + " successfully canceled (no rider).";
+        }
 
+        // Check if Driver exists before calling getDriverId()
+        if (currentRide.getDriver() != null) {
+            releaseDriver(currentRide.getDriver().getDriverId());
+            logger.info("Driver {} released for canceled ride {}.", currentRide.getDriver().getDriverId(), rideId);
+        } else {
+            logger.warn("Ride {} has no associated driver.", rideId);
+        }
+
+        logger.info("Ride {} canceled successfully.", rideId);
+        return "Ride " + rideId + " successfully canceled.";
     }
+
 
     @Override
     public String billRide(int rideId) {
@@ -146,9 +160,9 @@ public class RideService implements RideServiceInterface {
         return "Total fare of the ride " + rideId + " is Rs. " + totalFare;
     }
 
-    @Override
+
     private void releaseDriver(int driverId) {
-        if (driverId == 0) return;
+
 
         driverRepository.findById(driverId).ifPresent(driver -> {
             driver.setAvailable(true);
@@ -162,17 +176,17 @@ public class RideService implements RideServiceInterface {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    @Override
-    public List<Ride> getAllRidesByRider(int riderId) {
-        logger.info("Fetching all rides for rider {}", riderId);
-        return rideRepository.findByRiderId(riderId);
-    }
-
-    @Override
-    public List<Ride> getAllRidesByDriver(int driverId) {
-        logger.info("Fetching all rides for driver {}", driverId);
-        return rideRepository.findByDriverId(driverId);
-    }
+//    @Override
+//    public List<Ride> getAllRidesByRider(int riderId) {
+//        logger.info("Fetching all rides for rider {}", riderId);
+//        return rideRepository.findByRiderId(riderId);
+//    }
+//
+//    @Override
+//    public List<Ride> getAllRidesByDriver(int driverId) {
+//        logger.info("Fetching all rides for driver {}", driverId);
+//        return rideRepository.findByDriverId(driverId);
+//    }
 
     @Override
     public String startRide(int driverId,int rideId) {

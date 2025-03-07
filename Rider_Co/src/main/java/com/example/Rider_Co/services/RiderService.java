@@ -1,7 +1,9 @@
 package com.example.Rider_Co.services;
 
+import com.example.Rider_Co.models.Driver;
 import com.example.Rider_Co.models.Ride;
 import com.example.Rider_Co.models.Rider;
+import com.example.Rider_Co.repositories.DriverRepository;
 import com.example.Rider_Co.repositories.RideRepository;
 import com.example.Rider_Co.repositories.RiderRepository;
 import com.example.Rider_Co.serviceInterfaces.RiderServiceInterface;
@@ -21,6 +23,9 @@ public class RiderService implements RiderServiceInterface {
 
     @Autowired
     private RideRepository rideRepository;
+
+    @Autowired
+    private DriverRepository driverRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(RiderService.class);
 
@@ -109,17 +114,20 @@ public class RiderService implements RiderServiceInterface {
             return "RIDER_NOT_FOUND";
         }
 
+        // Debugging: Log received values
+        logger.info("Received destination coordinates: X = {}, Y = {}", destinationCoordinateX, destinationCoordinateY);
+
         // Check if the rider already has an ongoing ride
-        Optional<Ride> existingRide = rideRepository.findByRiderIdAndIsCompleted(riderId, false);
-        if (existingRide.isPresent()) {
+        List<Ride> existingRides = rideRepository.findByRider_RiderIdAndIsCompleted(riderId, false);
+        if (!existingRides.isEmpty()) {
             logger.warn("Rider with ID: {} already has an active ride.", riderId);
             return "RIDE_ALREADY_EXISTS_FOR_RIDER " + riderId;
         }
 
         // Create a new ride request
         Ride ride = new Ride();
-        ride.getDriver().setDriverId(0); // Initially unassigned
-        ride.getRider().setRiderId(riderId);
+        ride.setDriver(null);
+        ride.setRider(rider);
         ride.setPickupCoordinateX(rider.getCoordinateX());
         ride.setPickupCoordinateY(rider.getCoordinateY());
         ride.setDestinationCoordinateX(destinationCoordinateX);
@@ -127,9 +135,12 @@ public class RiderService implements RiderServiceInterface {
         ride.setRideFare(0);
         ride.setTimeTaken(0);
 
+        // Debugging: Log ride details before saving
+        logger.info("Saving ride with destination: X = {}, Y = {}", ride.getDestinationCoordinateX(), ride.getDestinationCoordinateY());
 
         rideRepository.save(ride);
-        logger.info("Ride created for rider ID: {} with destination ({}, {})", riderId, destinationCoordinateX, destinationCoordinateY);
+
         return "Successfully added the ride for rider " + riderId;
     }
+
 }

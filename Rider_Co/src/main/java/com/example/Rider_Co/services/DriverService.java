@@ -106,20 +106,25 @@ public class DriverService implements DriverServiceInterface {
     @Override
     public String AcceptRide(int driverId, int rideId) {
         Ride selectedRide = rideRepository.findById(rideId).orElse(null);
+        Driver driver=driverRepository.findById(driverId).orElse(null);
 
         if (selectedRide == null) {
             logger.warn("Ride with ID: {} is already assigned or does not exist", rideId);
             return "Ride is already assigned to someone else.";
         }
 
-        selectedRide.getDriver().setDriverId(driverId);
+        if (driver == null) {
+            logger.warn("Driver with ID: {} doesn't exists", driverId);
+            return "Driver doesn't exists .";
+        }
+
+        selectedRide.setDriver(driver);
         selectedRide.setStatus(RideStatus.AWAITING_PICKUP);
         selectedRide.setRideAccepted(true);
         rideRepository.save(selectedRide);
         logger.info("Ride with ID: {} assigned to driver ID: {}", rideId, driverId);
 
         // Mark driver as unavailable after accepting a ride
-        Driver driver = driverRepository.findById(driverId).orElse(null);
         if (driver != null) {
             driver.setAvailable(false);
             driverRepository.save(driver);
@@ -151,7 +156,8 @@ public class DriverService implements DriverServiceInterface {
         double driverX = driver.getCoordinateX();
         double driverY = driver.getCoordinateY();
 
-        List<Ride> availableRides = rideRepository.findAllUnassignedRide();
+        List<Ride> availableRides = rideRepository.findAllUnassignedRide(RideStatus.AVAILABLE_RIDE);
+
 
         // Sort rides based on the distance from the driver
         availableRides.sort((r1, r2) -> {

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MatchRequestDto {
-    private double endX;
-    private  double endY;
+    private double destinationCoordinateX;
+    private  double destinationCoordinateY;
 }

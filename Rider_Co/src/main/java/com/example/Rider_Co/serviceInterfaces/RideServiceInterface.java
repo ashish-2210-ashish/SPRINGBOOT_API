@@ -12,8 +12,8 @@ public interface RideServiceInterface {
     String cancelRide(int rideId);
     String billRide(int rideId);
     double calculateDistance(double x1, double y1, double x2, double y2);
-    List<Ride> getAllRidesByRider(int riderId);
-    List<Ride> getAllRidesByDriver(int driverId);
+//    List<Ride> getAllRidesByRider(int riderId);
+//    List<Ride> getAllRidesByDriver(int driverId);
     String startRide(int driverId,int rideId);
 
 }

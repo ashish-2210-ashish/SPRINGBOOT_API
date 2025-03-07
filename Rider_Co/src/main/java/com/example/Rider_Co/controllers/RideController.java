@@ -1,7 +1,7 @@
 package com.example.Rider_Co.controllers;
 
 import com.example.Rider_Co.models.Ride;
-import com.example.Rider_Co.services.RideService;
+import com.example.Rider_Co.serviceInterfaces.RideServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class RideController {
     private static final Logger logger = LoggerFactory.getLogger(RideController.class);
 
     @Autowired
-    RideService rideService;
+    private RideServiceInterface rideService;
 
     /**
      * Retrieves a list of all rides.
@@ -33,22 +33,22 @@ public class RideController {
      * @param riderId ID of the rider
      * @return List of rides for the rider
      */
-    @GetMapping("/rider/{riderId}")
-    public List<Ride> getAllRideByRider(@PathVariable int riderId) {
-        logger.info("Fetching all rides for rider with ID: {}", riderId);
-        return rideService.getAllRidesByRider(riderId);
-    }
+//    @GetMapping("/rider/{riderId}")
+//    public List<Ride> getAllRideByRider(@PathVariable int riderId) {
+//        logger.info("Fetching all rides for rider with ID: {}", riderId);
+//        return rideService.getAllRidesByRider(riderId);
+//    }
 
     /**
      * Retrieves all rides associated with a specific driver.
      * @param driverId ID of the driver
      * @return List of rides for the driver
      */
-    @GetMapping("/driver/{driverId}")
-    public List<Ride> getAllRideByDriver(@PathVariable int driverId) {
-        logger.info("Fetching all rides for driver with ID: {}", driverId);
-        return rideService.getAllRidesByDriver(driverId);
-    }
+//    @GetMapping("/driver/{driverId}")
+//    public List<Ride> getAllRideByDriver(@PathVariable int driverId) {
+//        logger.info("Fetching all rides for driver with ID: {}", driverId);
+//        return rideService.getAllRidesByDriver(driverId);
+//    }
 
     /**
      * Retrieves a ride by its ID.

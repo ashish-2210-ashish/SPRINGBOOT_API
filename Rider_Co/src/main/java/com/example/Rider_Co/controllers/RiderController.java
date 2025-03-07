@@ -2,7 +2,7 @@ package com.example.Rider_Co.controllers;
 
 import com.example.Rider_Co.dto.MatchRequestDto;
 import com.example.Rider_Co.models.Rider;
-import com.example.Rider_Co.services.RiderService;
+import com.example.Rider_Co.serviceInterfaces.RiderServiceInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class RiderController {
     private static final Logger logger = LoggerFactory.getLogger(RiderController.class);
 
     @Autowired
-    private RiderService riderService;
+    private RiderServiceInterface riderService;
 
     /**
      * Retrieves all riders.
@@ -84,8 +84,8 @@ public class RiderController {
      */
     @PostMapping(value = "/match/{riderId}", consumes = "application/json")
     public String matchDrivers(@PathVariable int riderId, @RequestBody MatchRequestDto matchRequestDto) {
-        double endX = matchRequestDto.getEndX();
-        double endY = matchRequestDto.getEndY();
+        double endX = matchRequestDto.getDestinationCoordinateX();
+        double endY = matchRequestDto.getDestinationCoordinateY();
         logger.info("Matching drivers for rider ID: {} with destination coordinates ({}, {})", riderId, endX, endY);
         return riderService.matchDrivers(riderId, endX, endY);
     }
