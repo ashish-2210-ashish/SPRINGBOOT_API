@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "yourSuperSecretKeyThatMustBeAtLeast32BytesLong";
+    private static final String SECRET_KEY = "thisismysamplesecretkeywhichisabove32bytesblahblahblahblahblah";
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);

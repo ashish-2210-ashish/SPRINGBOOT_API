@@ -21,7 +21,7 @@ import java.util.Collections;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final String SECRET_KEY = "thisismysamplesecretkeywhichisabove32bytes";
+    private static final String SECRET_KEY = "thisismysamplesecretkeywhichisabove32bytesblahblahblahblahblah";
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);

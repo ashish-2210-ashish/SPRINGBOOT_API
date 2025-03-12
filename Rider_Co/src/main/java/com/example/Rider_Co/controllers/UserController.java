@@ -1,6 +1,7 @@
 package com.example.Rider_Co.controllers;
 
 import com.example.Rider_Co.models.User;
+import com.example.Rider_Co.serviceInterfaces.UserServiceInterface;
 import com.example.Rider_Co.services.UserService;
 import com.example.Rider_Co.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceInterface userService;
     private final JwtUtil jwtUtil;
 
     public UserController(UserService userService, JwtUtil jwtUtil) {
