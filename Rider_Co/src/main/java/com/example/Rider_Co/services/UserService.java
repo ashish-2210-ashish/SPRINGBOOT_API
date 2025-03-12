@@ -11,26 +11,23 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     public String registerUser(User user) {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             return "Username already taken";
         }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "User registered successfully!";
     }
 
-    public boolean authenticateUser(User user) {
-        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-
-        return existingUser.isPresent() && passwordEncoder.matches(user.getPassword(), existingUser.get().getPassword());
+    public Optional<User> authenticate(String username, String rawPassword) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()));
     }
 }
