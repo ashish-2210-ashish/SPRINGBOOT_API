@@ -11,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class Ride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int  rideId;
+    private int rideId;
 
     @ManyToOne
     @JoinColumn(name = "rider_id", nullable = false)
@@ -43,14 +43,11 @@ public class Ride {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RideStatus status=RideStatus.AVAILABLE_RIDE;
+    private RideStatus status = RideStatus.AVAILABLE_RIDE;
 
     @Column(nullable = false)
     private double rideFare;
 
     @Column(nullable = false)
     private double timeTaken;
-
-
-
 }

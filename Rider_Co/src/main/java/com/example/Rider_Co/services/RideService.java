@@ -176,17 +176,7 @@ public class RideService implements RideServiceInterface {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-//    @Override
-//    public List<Ride> getAllRidesByRider(int riderId) {
-//        logger.info("Fetching all rides for rider {}", riderId);
-//        return rideRepository.findByRiderId(riderId);
-//    }
-//
-//    @Override
-//    public List<Ride> getAllRidesByDriver(int driverId) {
-//        logger.info("Fetching all rides for driver {}", driverId);
-//        return rideRepository.findByDriverId(driverId);
-//    }
+
 
     @Override
     public String startRide(int driverId,int rideId) {
@@ -206,4 +196,45 @@ public class RideService implements RideServiceInterface {
 
 
     }
+
+    /**
+     * Fetches the ride history of a specific rider.
+     * @param riderId The ID of the rider.
+     * @return List of rides associated with the specified rider.
+     */
+    @Override
+    public List<Ride> getRideHistoryByRider(int riderId) {
+        logger.info("Fetching ride history for Rider ID: {}", riderId);
+        List<Ride> riderRides = rideRepository.findByRider_RiderId(riderId);
+
+        if (riderRides.isEmpty()) {
+            logger.warn("No ride history found for Rider ID: {}", riderId);
+        } else {
+            logger.info("Found {} rides for Rider ID: {}", riderRides.size(), riderId);
+        }
+
+        return riderRides;
+    }
+
+    /**
+     * Fetches the ride history of a specific driver.
+     * @param driverId The ID of the driver.
+     * @return List of rides associated with the specified driver.
+     */
+    @Override
+    public List<Ride> getRideHistoryByDriver(int driverId) {
+        logger.info("Fetching ride history for Driver ID: {}", driverId);
+        List<Ride> driverRides = rideRepository.findByDriver_DriverId(driverId);
+
+        if (driverRides.isEmpty()) {
+            logger.warn("No ride history found for Driver ID: {}", driverId);
+        } else {
+            logger.info("Found {} rides for Driver ID: {}", driverRides.size(), driverId);
+        }
+
+        return driverRides;
+    }
+
+
+
 }
